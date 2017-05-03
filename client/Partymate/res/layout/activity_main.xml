@@ -1,0 +1,115 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <ImageView
+        android:id="@+id/imageTitle"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"
+        android:src="@drawable/txt_main_title" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" >
+
+        <TextView
+            android:id="@+id/labelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="59dp"
+            android:text="用户名"
+            android:textColor="#ffffff"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/editTextName2"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/labelName"
+            android:layout_alignBottom="@+id/labelName"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/labelName"
+            android:ems="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" >
+
+        <TextView
+            android:id="@+id/labelPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageTitle"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="59dp"
+            android:text="密    码"
+            android:textColor="#ffffff"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword2"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/linearLayoutName"
+            android:layout_below="@+id/imageTitle"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="25dp"
+            android:ems="10"
+            android:inputType="textPassword" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" >
+
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btn_register"
+            android:layout_alignBottom="@+id/btn_register"
+            android:layout_alignLeft="@+id/imageTitle"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:text="登录"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/linearLayoutName"
+            android:layout_below="@+id/linearLayout1"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="52dp"
+            android:text="注册"
+            android:textSize="30dp" />
+    </LinearLayout>
+
+</RelativeLayout>
