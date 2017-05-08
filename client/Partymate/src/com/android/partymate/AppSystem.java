@@ -12,5 +12,7 @@ public class AppSystem extends Application
 		// TODO Auto-generated method stub
 		super.onCreate();
 		_network_system = new NetworkSystem();
+		Thread _network_thread = new Thread(_network_system);
+		_network_thread.start();
 	}
 }

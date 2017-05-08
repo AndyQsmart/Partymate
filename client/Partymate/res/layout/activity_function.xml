@@ -148,7 +148,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/linearLayout1"
-        android:visibility="gone" >
+         android:visibility="gone">
 
         <TableLayout
             android:id="@+id/my_party_table"
@@ -191,29 +191,6 @@
                     android:textColor="#ffffff" />
             </TableRow>
 
-            <TableRow>
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="party1"
-                    android:textColor="#ffffff" />
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="2017.4.1"
-                    android:textColor="#ffffff" />
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="place1"
-                    android:textColor="#ffffff" />
-            </TableRow>
         </TableLayout>
     </FrameLayout>
 
@@ -334,6 +311,7 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/other_party_table_name_title"
                     android:layout_margin="4dp"
                     android:background="#000000"
                     android:gravity="center"
@@ -362,36 +340,7 @@
                     android:textColor="#ffffff" />
             </TableRow>
 
-            <TableRow>
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="party1"
-                    android:textColor="#ffffff" />
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="2017.4.1"
-                    android:textColor="#ffffff" />
-
-                <TextView
-                    android:layout_margin="4dp"
-                    android:background="#000000"
-                    android:gravity="center"
-                    android:text="place1"
-                    android:textColor="#ffffff" />
-
-                <Button
-                    android:id="@+id/enter_party_add1"
-                    android:layout_height="45dp"
-                    android:gravity="center"
-                    android:text="加入派对" />
-
-            </TableRow>
+            
         </TableLayout>
     </FrameLayout>
 

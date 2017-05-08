@@ -1,8 +1,12 @@
 package com.qt.server;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.qt.core.UserBase;
 import com.qt.util.Logger;
 
 public class ClientListener implements Runnable
@@ -10,6 +14,18 @@ public class ClientListener implements Runnable
 	protected ServerSocket server = null;
 	protected int SERVER_PORT = 4700;
 	protected boolean _stoped = true;
+	
+	protected EventManager _event_manager = null;
+	
+	public ClientListener(EventManager event_manager)
+	{
+		_event_manager = event_manager;
+	}
+	
+	public void tryToStop()
+	{
+		this._stoped = true;
+	}
 
 	public void run()
 	{
@@ -44,14 +60,9 @@ public class ClientListener implements Runnable
 			if (socket != null)
 			{
 				Logger.Info(this, "run", "accept a client successfully");
-				//start a server
+				UserBase user_base = new UserBase(socket);
+				_event_manager.addEvent(user_base);
 			}
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		Thread server_thread = new Thread(new ClientListener());
-		server_thread.start();
 	}
 }

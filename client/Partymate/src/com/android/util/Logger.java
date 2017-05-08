@@ -6,18 +6,33 @@ public class Logger
 {
 	protected static final String TAG = "Partymate";
 		
+	public static void Info(Object _obj, String _function, String _message)
+	{
+		Info(_obj.getClass().getName() + "." + _function, _message);
+	}
+	
 	public static void Info(String _function, String _message)
 	{
 		Log.i(TAG, _function + ": " + _message);
 	}
 	
+	public static void Warning(Object _obj, String _function, String _message)
+	{
+		Warning(_obj.getClass().getName() + "." + _function, _message);
+	}
+	
 	public static void Warning(String _function, String _message)
 	{
-		Log.i(TAG, _function + ": " + _message);
+		Log.w(TAG, _function + ": " + _message);
+	}
+	
+	public static void Error(Object _obj, String _function, String _message)
+	{
+		Error(_obj.getClass().getName() + "." + _function, _message);
 	}
 	
 	public static void Error(String _function, String _message)
 	{
-		Log.i(TAG, _function + ": " + _message);
+		Log.e(TAG, _function + ": " + _message);
 	}
 }

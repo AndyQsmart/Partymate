@@ -33,7 +33,6 @@ public final class R {
         public static final int create_party_page_textTime=0x7f060014;
         public static final int editTextName2=0x7f06001f;
         public static final int editTextPassword2=0x7f060021;
-        public static final int enter_party_add1=0x7f06001b;
         public static final int enter_party_btn=0x7f060004;
         public static final int enter_party_page=0x7f060019;
         public static final int enter_party_table=0x7f06001a;
@@ -55,6 +54,7 @@ public final class R {
         public static final int my_party_page=0x7f06000e;
         public static final int my_party_table=0x7f06000f;
         public static final int my_party_table_name_title=0x7f060010;
+        public static final int other_party_table_name_title=0x7f06001b;
         public static final int quit_btn=0x7f060005;
     }
     public static final class layout {
