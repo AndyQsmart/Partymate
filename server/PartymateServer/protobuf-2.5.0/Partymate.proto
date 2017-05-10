@@ -1,0 +1,127 @@
+enum MessageType
+{
+	REQUEST_LOGIN                     = 10001;
+    NOTIFY_LOGIN                      = 10002;
+	REQUEST_REGISTER                  = 10003;
+    NOTIFY_REGISTER                   = 10004;
+	REQUEST_CREATE_PARTY              = 10005;
+	NOTIFY_CREATE_PARTY               = 10006;
+	REQUEST_ATTEND_PARTY              = 10007;
+	NOTIFY_ATTEND_PARTY               = 10008;
+	REQUEST_GET_ALL_PARTY             = 10009;
+	NOTIFY_GET_ALL_PARTY              = 10010;
+	REQUEST_GET_MY_PARTY              = 10011;
+	NOTIFY_GET_MY_PARTY               = 10012;
+	NOTIFY_PARTY                      = 10013;
+	REQUEST_CHANGE_INFO               = 10014;
+	NOTIFY_CHANGE_INFO                = 10015;
+}
+
+message Package
+{
+	required uint32 message_id = 1;
+	optional bytes  data       = 2;
+}
+
+//REQUEST_LOGIN
+message CSRequestLogin
+{
+	optional string   username       = 1;
+	optional string   passwd    = 2;
+}
+
+//NOTIFY_LOGIN
+message CSNotifyLogin
+{
+	optional bool     result     = 1;
+	optional string   username   =2;
+}
+
+//REQUEST_REGISTER
+message CSRequestRegister
+{
+	optional string   username       = 1;
+	optional string   passwd    = 2;
+}
+
+//NOTIFY_REGISTER
+message CSNotifyRegister
+{
+	optional bool     result     = 1;
+}
+
+//REQUEST_CREATE_PARTY
+message CSRequestCreateParty
+{
+	optional string   name     = 1;
+	optional string   time     = 2;
+	optional string   place    = 3;
+}
+
+//NOTIFY_CREATE_PARTY
+message CSNotifyCreateParty
+{
+	optional bool    result     = 1;
+}
+
+//REQUEST_ATTEND_PARTY
+message CSRequestAttendParty
+{
+	optional string   name     = 1;
+}
+
+//NOTIFY_ATTEND_PARTY
+message CSNotifyAttendParty
+{
+	optional bool    result     = 1;
+}
+
+//REQUEST_GET_ALL_PARTY
+message CSRequestGetAllParty
+{
+}
+
+message PBPartyInfo
+{
+	optional string   name     = 1;
+	optional string   time     = 2;
+	optional string   place    = 3;
+}
+
+//NOTIFY_GET_ALL_PARTY
+message CSNotifyGetAllParty
+{
+	repeated PBPartyInfo partys   =  1;
+}
+
+//REQUEST_GET_MY_PARTY
+message CSRequestGetMyParty
+{
+}
+
+//NOTIFY_GET_MY_PARTY
+message CSNotifyGetMyParty
+{
+	repeated PBPartyInfo partys   =  1;
+}
+
+//NOTIFY_PARTY
+message CSNotifyParty
+{
+	repeated PBPartyInfo partys   =  1;
+}
+
+//REQUEST_CHANGE_INFO
+message CSRequestChangeInfo
+{
+	optional string   username   = 1;
+	optional string   nickname   = 2;
+	optional string   password   = 3;
+}
+
+//NOTIFY_CHANGE_INFO
+message CSNotifyChangeInfo
+{
+	optional bool    result     = 1;
+}
+

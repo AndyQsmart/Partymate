@@ -29,6 +29,17 @@ public class SocketBuffer
 		_data = new byte[_max_len];
 		_from = _to = 0;
 	}
+
+	public byte[] getData()
+	{
+		if ((_to-_from+_max_len)%_max_len == 0) return null;
+		int package_len = (_to-_from+_max_len)%_max_len;
+		byte[] package_byte = new byte[package_len];
+		for (int i = 0; i < package_len; ++i)
+			package_byte[i] = _data[(_from+i)%_max_len];
+		_from = _to;
+		return package_byte;
+	}
 	
 	public boolean addPackage(byte[] _new_package, int _package_len)
 	{
@@ -73,7 +84,7 @@ public class SocketBuffer
 		byte[] package_byte = new byte[package_len];
 		int all_len = 4+package_len;
 		for (int i = 4; i < all_len; ++i)
-			package_byte[i] = _data[(_from+i)%_max_len];
+			package_byte[i-4] = _data[(_from+i)%_max_len];
 		_from = (_from+package_len+4)%_max_len;
 		return package_byte;
 	}

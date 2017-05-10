@@ -59,7 +59,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/linearLayout1"
-        android:visibility="gone" >
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,23 +70,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp" >
-
-                <TextView
-                    android:id="@+id/info_page_textName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="用户名"
-                    android:textColor="#ffffff"
-                    android:textSize="30dp" />
-
-                <EditText
-                    android:id="@+id/info_page_editTextName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <requestFocus />
-                </EditText>
             </LinearLayout>
 
             <LinearLayout
@@ -212,7 +195,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp" >
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:id="@+id/create_party_page_textParty"
@@ -235,7 +218,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp" >
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:id="@+id/create_party_page_textTime"
@@ -245,18 +228,24 @@
                     android:text="时   间"
                     android:textColor="#ffffff"
                     android:textSize="30dp" />
-
-                <EditText
-                    android:id="@+id/create_party_page_editTextTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-                </EditText>
             </LinearLayout>
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right" />
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp" >
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:id="@+id/create_party_page_textPlace"
@@ -278,7 +267,7 @@
                 android:id="@+id/create_party_page_create_party_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:text="创建派对" />
         </LinearLayout>
     </FrameLayout>
@@ -290,7 +279,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/linearLayout1" >
+        android:layout_toRightOf="@+id/linearLayout1" 
+        android:visibility="gone" >
 
         <TableLayout
             android:id="@+id/enter_party_table"

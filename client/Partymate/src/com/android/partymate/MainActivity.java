@@ -5,6 +5,7 @@ import com.android.util.Logger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity
 	protected EditText _username_txt;
 	protected EditText _password_txt;
 	protected AppSystem _app_system;
+	Toast _toast = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -72,9 +74,27 @@ public class MainActivity extends Activity
 		super.onDestroy();
 	}
 	
+	public void dealLogin(boolean isok)
+	{
+		if (isok)
+		{
+			Intent intent = new Intent(MainActivity.this, FunctionActivity.class);
+			startActivity(intent);
+		}
+		else
+		{
+			_toast.show();
+		}
+	}
+	
 	protected void findObjects()
 	{
 		_app_system = (AppSystem)getApplication();
+		_app_system.setMainActivity(this);
+
+		_toast = Toast.makeText(
+					MainActivity.this, "’À∫≈ªÚ√‹¬Î¥ÌŒÛ", Toast.LENGTH_LONG);
+
 		
 		_login_btn = (Button)this.findViewById(R.id.buttonLogin);
 		_login_btn.setOnClickListener(new View.OnClickListener()
@@ -83,24 +103,14 @@ public class MainActivity extends Activity
 			public void onClick(View v)
 			{
 				// TODO Auto-generated method stub
-				if (_app_system._network_system.tryLogin(
+				_app_system._network_system.tryLogin(
 						_username_txt.getText().toString(),
-						_password_txt.getText().toString()))
-				{
-					Intent intent = new Intent(MainActivity.this, FunctionActivity.class);
-					startActivity(intent);
-				}
-				else
-				{
-					Toast _toast = Toast.makeText(
-							MainActivity.this, "’À∫≈ªÚ√‹¬Î¥ÌŒÛ", Toast.LENGTH_LONG);
-					_toast.show();
-				}
+						_password_txt.getText().toString());
 			}
 		});
 
 		//registerBtn
-		_register_btn = (Button)this.findViewById(R.id.btn_register);
+		_register_btn = (Button)this.findViewById(R.id.btn_try_register);
 		_register_btn.setOnClickListener(new View.OnClickListener()
 		{
 			@Override

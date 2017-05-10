@@ -1,20 +1,32 @@
 package com.android.partymate;
 
-import com.android.util.Logger;
+import java.util.LinkedList;
 
+import com.android.proto.Partymate;
+import com.android.util.Logger;
+import com.android.util.PartyInfo;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class FunctionActivity extends Activity
 {
@@ -30,6 +42,10 @@ public class FunctionActivity extends Activity
 	protected FrameLayout _create_party_page;
 	protected FrameLayout _enter_party_page;
 
+	protected AppSystem _app_system;
+
+	NotificationManager notification_manager = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -40,6 +56,11 @@ public class FunctionActivity extends Activity
 
 	protected void findObjects()
 	{
+		_app_system = (AppSystem)getApplication();
+		_app_system.setFunctionActivity(this);
+		
+		notification_manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);  
+
 		_info_btn = (Button) this.findViewById(R.id.info_btn);
 		_info_btn.setOnClickListener(new View.OnClickListener()
 		{
@@ -62,7 +83,8 @@ public class FunctionActivity extends Activity
 				_pre_page.setVisibility(View.GONE);
 				_my_party_page.setVisibility(View.VISIBLE);
 				_pre_page = _my_party_page;
-				setMyPartys();
+				_app_system._network_system.getMyPartys();
+				//setMyPartys();
 			}
 		});
 
@@ -87,7 +109,8 @@ public class FunctionActivity extends Activity
 				_pre_page.setVisibility(View.GONE);
 				_enter_party_page.setVisibility(View.VISIBLE);
 				_pre_page = _enter_party_page;
-				setOtherPartys();
+				_app_system._network_system.getAllPartys();
+				//setOtherPartys();
 			}
 		});
 
@@ -103,14 +126,54 @@ public class FunctionActivity extends Activity
 
 		_pre_page = null;
 		_info_page = (FrameLayout) this.findViewById(R.id.info_page);
-		_info_page.setVisibility(View.VISIBLE);
+		_info_page.setVisibility(View.GONE);
 		_pre_page = _info_page;
+		((Button)this.findViewById(R.id.change_info_btn)).setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				String password = ((EditText)findViewById(R.id.info_page_editTextPassword)).getText().toString();
+				String nick_name = ((EditText)findViewById(R.id.info_page_editTextNickName)).getText().toString();
+				_app_system._network_system.tryChangeInfo(password, nick_name);
+			}
+		});
 
 		_my_party_page = (FrameLayout) this.findViewById(R.id.my_party_page);
 		_my_party_page.setVisibility(View.GONE);
 
 		_create_party_page = (FrameLayout) this.findViewById(R.id.create_party_page);
 		_create_party_page.setVisibility(View.GONE);
+		((TimePicker)this.findViewById(R.id.timePicker)).setIs24HourView(true);;
+		((Button)this.findViewById(R.id.create_party_page_create_party_btn)).setOnClickListener(
+				new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				// TODO Auto-generated method stub
+				String party_name = "";
+				String party_time = "";
+				String party_place = "";
+				
+				party_name = ((EditText)findViewById(R.id.create_party_page_editTextParty)).getText().toString();
+				
+				DatePicker date_picker = (DatePicker)findViewById(R.id.datePicker);
+				party_time = party_time + date_picker.getYear();
+				party_time = party_time + ((date_picker.getMonth()+1) > 9 ? (date_picker.getMonth()+1) : "0"+(date_picker.getMonth()+1));
+				party_time = party_time + (date_picker.getDayOfMonth() > 9 ? date_picker.getDayOfMonth() : "0"+date_picker.getDayOfMonth());
+
+				TimePicker time_picker = (TimePicker)findViewById(R.id.timePicker);
+				party_time = party_time + (time_picker.getCurrentHour() > 9 ? time_picker.getCurrentHour() : "0"+time_picker.getCurrentHour());
+				party_time = party_time + (time_picker.getCurrentMinute() > 9 ? time_picker.getCurrentMinute() : "0"+time_picker.getCurrentMinute());
+				
+				party_place = ((EditText)findViewById(R.id.create_party_page_editTextPlace)).getText().toString();
+
+				_app_system._network_system.tryCreateNewParty(party_name, party_time, party_place);
+			}
+		});
 
 		_enter_party_page = (FrameLayout) this.findViewById(R.id.enter_party_page);
 		_enter_party_page.setVisibility(View.GONE);
@@ -118,7 +181,7 @@ public class FunctionActivity extends Activity
 
 	protected int _my_party_len_before = 0;
 
-	protected void setMyPartys()
+	protected void setMyPartys(LinkedList<PartyInfo> partys)
 	{
 		TableLayout _table_layout = (TableLayout) findViewById(R.id.my_party_table);
 		TextView _my_party_table_name_title = (TextView) findViewById(R.id.my_party_table_name_title);
@@ -126,8 +189,11 @@ public class FunctionActivity extends Activity
 		for (int i = 0; i < _my_party_len_before; ++i)
 			_table_layout.removeViewAt(2);
 
-		for (int i = 0; i < 3; i++)
+		_my_party_len_before = 0;
+		PartyInfo item = null;
+		while (!partys.isEmpty())
 		{
+			item = partys.poll();
 			TableRow tableRow = new TableRow(this);
 
 			TextView _item_name = new TextView(this);
@@ -137,7 +203,7 @@ public class FunctionActivity extends Activity
 			_item_name.setGravity(Gravity.CENTER);
 			_item_name.setBackgroundColor(Color.BLACK);
 
-			_item_name.setText("party" + i);
+			_item_name.setText(item.partyname);
 			tableRow.addView(_item_name);
 
 			TextView _item_time = new TextView(this);
@@ -147,7 +213,7 @@ public class FunctionActivity extends Activity
 			_item_time.setGravity(Gravity.CENTER);
 			_item_time.setBackgroundColor(Color.BLACK);
 
-			_item_time.setText("party" + i);
+			_item_time.setText(item.partytime);
 			tableRow.addView(_item_time);
 
 			TextView _item_place = new TextView(this);
@@ -157,17 +223,17 @@ public class FunctionActivity extends Activity
 			_item_place.setGravity(Gravity.CENTER);
 			_item_place.setBackgroundColor(Color.BLACK);
 
-			_item_place.setText("party" + i);
+			_item_place.setText(item.partyplace);
 			tableRow.addView(_item_place);
 
 			_table_layout.addView(tableRow, new TableLayout.LayoutParams());
+			_my_party_len_before++;
 		}
-		_my_party_len_before = 3;
 	}
 	
 	protected int _other_party_len_before = 0;
 
-	protected void setOtherPartys()
+	public void setOtherPartys(LinkedList<PartyInfo> partys)
 	{
 		TableLayout _table_layout = (TableLayout) findViewById(R.id.enter_party_table);
 		TextView _other_party_table_name_title = (TextView) findViewById(R.id.other_party_table_name_title);
@@ -175,8 +241,12 @@ public class FunctionActivity extends Activity
 		for (int i = 0; i < _other_party_len_before; ++i)
 			_table_layout.removeViewAt(2);
 
-		for (int i = 0; i < 3; i++)
+		
+		_other_party_len_before = 0;
+		PartyInfo item = null;
+		while (!partys.isEmpty())
 		{
+			item = partys.poll();
 			TableRow tableRow = new TableRow(this);
 
 			TextView _item_name = new TextView(this);
@@ -186,7 +256,7 @@ public class FunctionActivity extends Activity
 			_item_name.setGravity(Gravity.CENTER);
 			_item_name.setBackgroundColor(Color.BLACK);
 
-			_item_name.setText("party" + i);
+			_item_name.setText(item.partyname);
 			tableRow.addView(_item_name);
 
 			TextView _item_time = new TextView(this);
@@ -196,7 +266,7 @@ public class FunctionActivity extends Activity
 			_item_time.setGravity(Gravity.CENTER);
 			_item_time.setBackgroundColor(Color.BLACK);
 
-			_item_time.setText("party" + i);
+			_item_time.setText(item.partytime);
 			tableRow.addView(_item_time);
 
 			TextView _item_place = new TextView(this);
@@ -206,7 +276,7 @@ public class FunctionActivity extends Activity
 			_item_place.setGravity(Gravity.CENTER);
 			_item_place.setBackgroundColor(Color.BLACK);
 
-			_item_place.setText("party" + i);
+			_item_place.setText(item.partyplace);
 			tableRow.addView(_item_place);
 			
 			Button _item_enter = new Button(this);
@@ -220,17 +290,84 @@ public class FunctionActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					// TODO Auto-generated method stub
 					Logger.Info("setOtherPartys", "enter party" + _param);
+					_app_system._network_system.tryEnterParty(_param);
 				}
 			});
 			tableRow.addView(_item_enter);
 
 			_table_layout.addView(tableRow, new TableLayout.LayoutParams());
+			_other_party_len_before++;
 		}
-		_other_party_len_before = 3;
 	}
 	
+	protected void dealCreateParty(Boolean result)
+	{
+		Toast _toast = null;
+		if (result)
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "派对创建成功", Toast.LENGTH_LONG);
+		}
+		else
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "派对已存在", Toast.LENGTH_LONG);
+		}
+		_toast.show();
+	}
+	
+	protected void dealAttendParty(Boolean result)
+	{
+		Toast _toast = null;
+		if (result)
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "派对加入成功", Toast.LENGTH_LONG);
+		}
+		else
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "派对加入失败", Toast.LENGTH_LONG);
+		}
+		_toast.show();
+	}
+	
+	protected void dealChangeInfo(Boolean result)
+	{
+		Toast _toast = null;
+		if (result)
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "修改信息成功", Toast.LENGTH_LONG);
+		}
+		else
+		{
+			_toast = Toast.makeText(
+					FunctionActivity.this, "修改信息失败", Toast.LENGTH_LONG);
+		}
+		_toast.show();
+	}
+	
+	@SuppressLint("NewApi")
+	protected void notifyPartys(LinkedList<PartyInfo> partys)
+	{
+		Logger.Debug(this, "notifyPartys", partys.size()+"");
+		PartyInfo item = null;
+		while (!partys.isEmpty())
+		{
+			item = partys.poll();
+			String tips = "";
+			tips = "您的派对：" + item.partyname + "即将开始。";
+			tips = tips + "地点是" + item.partyplace;
+			Notification notification = new Notification.Builder(this)
+					.setContentTitle("派对提醒")
+				    .setContentText(tips)
+				    .setSmallIcon(R.drawable.ic_launcher).build();
+		    notification_manager.notify(100, notification);
+		}
+	}
+
 	protected class OnClickListenerWithStringParam implements View.OnClickListener
 	{
 		protected String _param;
@@ -246,4 +383,41 @@ public class FunctionActivity extends Activity
 			// TODO Auto-generated method stub
 		}
 	}
+	
+	public Handler handler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg) 
+		{
+			switch(msg.what)
+			{
+				case Partymate.MessageType.NOTIFY_GET_ALL_PARTY_VALUE:
+					setOtherPartys((LinkedList<PartyInfo>) msg.obj);
+					break;
+
+				case Partymate.MessageType.NOTIFY_GET_MY_PARTY_VALUE:
+					setMyPartys((LinkedList<PartyInfo>) msg.obj);
+					break;
+					
+				case Partymate.MessageType.NOTIFY_CREATE_PARTY_VALUE:
+					dealCreateParty((Boolean)msg.obj);
+					break;
+					
+				case Partymate.MessageType.NOTIFY_PARTY_VALUE:
+					notifyPartys((LinkedList<PartyInfo>) msg.obj);
+					break;
+					
+				case Partymate.MessageType.NOTIFY_ATTEND_PARTY_VALUE:
+					dealAttendParty((Boolean) msg.obj);
+					break;
+
+				case Partymate.MessageType.NOTIFY_CHANGE_INFO_VALUE:
+					dealChangeInfo((Boolean) msg.obj);
+					break;
+
+				default:
+					break;
+			}
+		}
+	};
 }

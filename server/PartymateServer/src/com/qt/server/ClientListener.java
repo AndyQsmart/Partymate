@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.qt.core.UnauthedUser;
 import com.qt.core.UserBase;
 import com.qt.util.Logger;
 
@@ -49,6 +50,7 @@ public class ClientListener implements Runnable
 			{
 				Logger.Info(this, "run", "wait for client");
 				socket = server.accept();
+				socket.setSoTimeout(4);
 				//使用accept()阻塞等待客户请求，有客
 				//请求到来则产生一个Socket对象，并继续执行
 			}
@@ -60,7 +62,7 @@ public class ClientListener implements Runnable
 			if (socket != null)
 			{
 				Logger.Info(this, "run", "accept a client successfully");
-				UserBase user_base = new UserBase(socket);
+				UnauthedUser user_base = new UnauthedUser(socket);
 				_event_manager.addEvent(user_base);
 			}
 		}

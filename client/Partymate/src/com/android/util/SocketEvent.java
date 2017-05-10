@@ -26,4 +26,9 @@ public class SocketEvent
 	{
 		return _event_type == EventType.WRITE_TYPE;
 	}
+	
+	public byte[] getData()
+	{
+		return _event_data;
+	}
 }
